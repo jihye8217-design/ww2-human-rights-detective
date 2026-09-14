@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>역사탐정 : 제2차 세계대전 사건파일</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- React & ReactDOM CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <!-- Babel Standalone CDN -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: #1e1b18;
+      color: #f3f4f6;
+    }
+    .detective-card {
+      background: linear-gradient(145deg, #2a2421, #1f1a17);
+      border: 1px solid #4a3e35;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: #4a3e35;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen custom-scrollbar">
+
+<div id="root"></div>
+
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+// ==========================================
+// 1. 사건 데이터 정의
+// ==========================================
+const CASES_DATA = [
+  {
+    id: 1,
+    code: "CASE 01",
+    title: "전쟁은 어디에서 시작되었는가?",
+    subtitle: "독일의 폴란드 침공과 제2차 세계대전 발발",
+    year: 1939,
+    briefing: "1939년 유럽. 한 국가의 공격적인 영토 확장이 결국 유럽 전체를 전쟁으로 끌어들이게 된다. 이 사건의 정체를 밝혀라!",
+    evidences: [
+      {
+        id: "e1",
+        title: "자료 1: 🗺️ 1939년 유럽 지도",
+        content: "1939년 당시 유럽의 세력 구도 지도입니다. 중앙 유럽에 위치한 독일은 동쪽으로 폴란드와 긴 국경을 접하고 있습니다.",
+        question: "지도에서 발견할 수 있는 중요한 단서는?",
+        options: [
+          "독일과 폴란드가 인접해 있다.",
+          "일본과 미국이 인접해 있다.",
+          "프랑스와 영국이 같은 국가이다.",
+          "소련이 아프리카에 위치한다."
+        ],
+        correctIndex: 0,
+        clue: "독일과 폴란드의 인접 국경"
+      },
+      {
+        id: "e2",
+        title: "자료 2: 📰 당시 신문 기사",
+        content: "「1939년 9월 1일 속보」 독포 국경 지대에서 국경 분쟁 발생 주장 직후, 독일군 탱크와 공격기가 폴란드 국경을 전면 침공함!",
+        clue: "1939년 / 독일 / 폴란드 / 침공"
+      },
+      {
+        id: "e3",
+        title: "자료 3: 📜 역사적 선전포고 문서",
+        content: "폴란드와의 상호보조 협정에 따라, 영국과 프랑스는 독일의 침공 중단을 요구했으나 거부당하자 9월 3일 독일에 선전포고를 발표하였다.",
+        clue: "영국·프랑스의 대독 선전포고"
+      }
+    ],
+    question: "지금까지의 단서를 종합하면 어떤 사건일까?",
+    options: [
+      "진주만 공격",
+      "폴란드 침공",
+      "노르망디 상륙작전",
+      "스탈린그라드 전투"
+    ],
+    answerIndex: 1, 
+    explanation: "🎉 사건 해결! 1939년 독일이 폴란드를 침공하자 영국과 프랑스가 독일에 선전포고하면서 유럽에서 제2차 세계대전이 시작되었습니다."
+  },
+  {
+    id: 2,
+    code: "CASE 02",
+    title: "영국은 어떻게 버텨냈을까?",
+    subtitle: "프랑스의 패배와 영국 본토 항공전",
+    year: 1940,
+    briefing: "프랑스가 불과 몇 주 만에 항복하고 서유럽이 독일의 손에 들어갔다. 이제 홀로 남은 영국을 향해 독일의 대대적인 공습이 시작되는데...",
+    evidences: [
+      {
+        id: "e1",
+        title: "자료 1: 🗺️ 점령된 유럽 지도",
+        content: "1940년 여름, 프랑스를 포함한 서유럽 대부분이 독일군에 점령되었습니다. 영국해협 건너 영국만이 유일하게 저항하고 있습니다.",
+        question: "영국의 지리적 상황과 관련된 단서는?",
+        options: [
+          "영국은 섬나라로 바다와 하늘을 통한 공격만 가능하다.",
+          "영국은 독일과 육지로 직접 연결되어 있다.",
+          "영국은 아시아 대륙에 위치한다.",
+          "영국은 이미 독일군에 항복했다."
+        ],
+        correctIndex: 0,
+        clue: "영국해협과 도서 지형"
+      },
+      {
+        id: "e2",
+        title: "자료 2: 📷 공군 전투기 사진 및 레이더 기록",
+        content: "영국 공군의 스핏파이어 전투기들과 신기술 '레이더'망이 독일 공군의 융단폭격을 사전 포착하여 방어에 성공했습니다.",
+        clue: "영국 공군의 방어와 레이더 활용"
+      }
+    ],
+    question: "독일이 프랑스를 점령했지만 영국까지 쉽게 점령하지 못한 이유와 관련된 사건은?",
+    options: [
+      "영국 본토 항공전",
+      "진주만 공격",
+      "스탈린그라드 전투",
+      "노르망디 상륙작전"
+    ],
+    answerIndex: 0, 
+    explanation: "🎉 사건 해결! 독일은 굴복시키려 대규모 공습을 가했으나, 영국 공군과 레이더 망의 철저한 방어로 상륙 시도를 저지했습니다."
+  },
+  {
+    id: 3,
+    code: "CASE 03",
+    title: "전쟁의 흐름이 바뀌다",
+    subtitle: "독소 전쟁과 스탈린그라드 전투",
+    year: 1942,
+    briefing: "독일은 불가침 조약을 깨고 소련을 전격 침공한다. 동부 전선에서의 처절한 혈전 중, 도시 하나를 둘러싼 치명적 전투가 벌어진다.",
+    evidences: [
+      {
+        id: "e1",
+        title: "자료 1: 🗺️ 동부 전선 및 지도",
+        content: "볼가강 연안의 핵심 공업도시 스탈린그라드. 독일 파울루스 6군이 이 도시를 포위했으나, 소련군에 역포위 당하며 혹한에 갇혔습니다.",
+        question: "이 도시 전투가 지닌 전략적 단서는?",
+        options: [
+          "독일군 대부대가 포위되어 괴멸적 타격을 입었다.",
+          "독일군이 무혈입성하여 손쉽게 승리했다.",
+          "미국 본토가 직접 공격받았다.",
+          "태평양 해전이 벌어졌다."
+        ],
+        correctIndex: 0,
+        clue: "볼가강 스탈린그라드에서의 독일군 포위"
+      },
+      {
+        id: "e2",
+        title: "자료 2: 📜 전투 항복 보고서",
+        content: "1943년 초, 스탈린그라드에 갇힌 독일 제6군 잔존 병력이 항복함. 이 전투 이후 독일은 동부 전선에서 주도권을 완전히 상실함.",
+        clue: "독일군 대패 및 동부전선 반격 전환"
+      }
+    ],
+    question: "독일군이 큰 타격을 입으면서 전쟁의 흐름이 바뀌는 계기가 된 전투는?",
+    options: [
+      "영국 본토 항공전",
+      "스탈린그라드 전투",
+      "진주만 공격",
+      "노르망디 상륙작전"
+    ],
+    answerIndex: 1, 
+    explanation: "🎉 사건 해결! 스탈린그라드 전투에서 독일군이 사상 치명적인 패배를 당하며 소련군의 대대적인 반격이 시작되었습니다."
+  },
+  {
+    id: 4,
+    code: "CASE 04",
+    title: "미국이 전쟁에 뛰어들다",
+    subtitle: "진주만 공격과 미국의 참전",
+    year: 1941,
+    briefing: "고립주의를 유지하며 중립을 지키던 미국. 그러나 1941년 12월 일요일 아침, 태평양의 휴양지 기지에 벼락같은 기습 공습이 가해진다.",
+    evidences: [
+      {
+        id: "e1",
+        title: "자료 1: 🗺️ 태평양 하와이 지도 및 사진",
+        content: "하와이 오아후섬 진주만에 닻을 내린 미국 태평양 함대를 향해 일본 함재기 300여 대가 예고 없이 기습 폭격을 감행했습니다.",
+        question: "공격 대상이 되었던 핵심 기지 단서는?",
+        options: [
+          "하와이 진주만의 미국 태평양 함대",
+          "영국 런던의 공군 기지",
+          "프랑스 파리의 육군 본부",
+          "독일 베를린의 총통 부처"
+        ],
+        correctIndex: 0,
+        clue: "일본의 하와이 진주만 기습"
+      },
+      {
+        id: "e2",
+        title: "자료 2: 📰 미국 대통령 연설문",
+        content: "「치욕의 날로 기억될 1941년 12월 7일」 미국 의회는 즉각 일본에 대한 전쟁 선포안을 승인하였고, 막강한 공업력을 바탕으로 참전함.",
+        clue: "1941년 미국의 제2차 세계대전 전면 참전"
+      }
+    ],
+    question: "1941년 일본의 공격을 계기로 미국이 본격적으로 제2차 세계대전에 참전하게 된 사건은?",
+    options: [
+      "폴란드 침공",
+      "진주만 공격",
+      "노르망디 상륙작전",
+      "스탈린그라드 전투"
+    ],
+    answerIndex: 1, 
+    explanation: "🎉 사건 해결! 1941년 12월 일본의 진주만 기습으로 미국이 참전하면서 전쟁은 연합국과 추축국 간의 범지구적 전쟁으로 확대되었습니다."
+  },
+  {
+    id: 5,
+    code: "CASE 05",
+    title: "유럽을 되찾아라",
+    subtitle: "노르망디 상륙작전",
+    year: 1944,
+    briefing: "1944년 6월 6일 D-Day. 독일이 굳건히 방어하고 있는 서유럽 해안을 탈환하기 위해 연합군 사상 최대 규모의 해상 상륙 작전이 개시된다.",
+    evidences: [
+      {
+        id: "e1",
+        title: "자료 1: 🗺️ 프랑스 북부 노르망디 해안 지도",
+        content: "아이젠하워 장군이 이끄는 미·영·캐나다 연합군 수송선단과 15만 명의 병력이 프랑스 노르망디 해안 지대로 대규모 상륙을 감행했습니다.",
+        question: "상륙 작전이 펼쳐진 핵심 지역 단서는?",
+        options: [
+          "프랑스 노르망디 해안",
+          "이탈리아 시칠리아 섬",
+          "러시아 레닌그라드",
+          "일본 오키나와"
+        ],
+        correctIndex: 0,
+        clue: "1944년 D-Day 노르망디 상륙"
+      },
+      {
+        id: "e2",
+        title: "자료 2: 📜 서부 전선 해방 보고서",
+        content: "노르망디 상륙 성공으로 연합군은 파리를 해방하고 독일 본토를 향해 양쪽(동부 소련, 서부 연합군)에서 압박을 가하게 되었습니다.",
+        clue: "서유럽 해방 및 독일에 대한 양면 압박"
+      }
+    ],
+    question: "1944년 연합군이 프랑스 노르망디에 상륙하여 서유럽 해방의 발판을 마련한 작전은?",
+    options: [
+      "바르바로사 작전",
+      "노르망디 상륙작전",
+      "진주만 공격",
+      "영국 본토 항공전"
+    ],
+    answerIndex: 1,
+    explanation: "🎉 사건 해결! 노르망디 상륙작전의 성공으로 서유럽 전선이 다시 열렸고 연합군은 독일의 숨통을 죄어갔습니다."
+  },
+  {
+    id: 6,
+    code: "CASE 06",
+    title: "전쟁은 어떻게 끝났을까?",
+    subtitle: "제2차 세계대전의 종결과 전후 세계",
+    year: 1945,
+    briefing: "1945년 5월 독일이 항복하고, 8월 일본이 항복 선언을 하면서 6년간의 참혹했던 전쟁이 막을 내린다. 수많은 희생 끝에 인류가 내린 결단은?",
+    evidences: [
+      {
+        id: "e1",
+        title: "자료 1: 📰 1945년 평화 선언과 전후 처리",
+        content: "독일과 일본의 항복으로 전쟁 종결. 수천만 명의 민간인 피해와 파괴를 겪은 인류는 다시는 이러한 비극이 반복되지 않기를 열망함.",
+        question: "전후 평화를 위해 인류가 창설하고자 한 국제기구 관련 단서는?",
+        options: [
+          "전 세계의 평화와 안전을 보장할 강력한 국제기구(UN)",
+          "특정 국가만을 위한 군사 동맹",
+          "경제적 이익만을 챙기는 무역 협정",
+          "침략 전쟁을 권장하는 기구"
+        ],
+        correctIndex: 0,
+        clue: "전쟁 피해 반성과 국제 평화 유지"
+      },
+      {
+        id: "e2",
+        title: "자료 2: 📜 국제연합(UN) 헌장 서명",
+        content: "1945년 10월, 국제연맹의 한계를 극복하고 분쟁 예방과 평화 유지를 위한 '국제연합(UN)'이 공식 출범하였습니다.",
+        clue: "국제연합(UN) 창설"
+      }
+    ],
+    question: "제2차 세계대전 이후 국제 평화와 협력을 위해 창설된 국제기구는?",
+    options: [
+      "국제연합",
+      "국제연맹",
+      "NATO",
+      "바르샤바 조약 기구"
+    ],
+    answerIndex: 0,
+    explanation: "🎉 사건 해결! 전쟁 직후 국제 평화와 안전을 유지하기 위해 1945년 국제연합(UN)이 창설되었습니다."
+  }
+];
+
+const INITIAL_TIMELINE_CARDS = [
+  { id: "A", text: "A. 노르망디 상륙작전", year: 1944 },
+  { id: "B", text: "B. 진주만 공격과 미국의 참전", year: 1941 },
+  { id: "C", text: "C. 독일의 폴란드 침공", year: 1939 },
+  { id: "D", text: "D. 스탈린그라드 전투", year: 1942 },
+  { id: "E", text: "E. 제2차 세계대전 종결", year: 1945 },
+  { id: "F", text: "F. 영국 본토 항공전", year: 1940 }
+];
+
+const CORRECT_TIMELINE_ORDER = ["C", "F", "B", "D", "A", "E"];
+
+// ==========================================
+// 2. 메인 앱 컴포넌트
+// ==========================================
+function App() {
+  const [screen, setScreen] = useState('home'); 
+  const [nickname, setNickname] = useState('');
+  const [score, setScore] = useState(0);
+  const [unlockedCases, setUnlockedCases] = useState(1);
+  const [solvedCases, setSolvedCases] = useState([false, false, false, false, false, false]);
+  const [cluesCollected, setCluesCollected] = useState([]);
+  const [currentCaseIdx, setCurrentCaseIdx] = useState(0);
+  const [showNotebook, setShowNotebook] = useState(false);
+
+  // 진행 중인 CASE 상태
+  const [evidenceStep, setEvidenceStep] = useState(0); 
+  const [selectedAnswer, setSelectedAnswer] = useState(null);
+  const [caseSolved, setCaseSolved] = useState(false);
+  const [attemptCount, setAttemptCount] = useState(0);
+  const [caseFeedback, setCaseFeedback] = useState('');
+
+  // 타임라인 상태
+  const [timelineOrder, setTimelineOrder] = useState([]);
+  const [draggedItemIndex, setDraggedItemIndex] = useState(null);
+  const [timelineSubmitted, setTimelineSubmitted] = useState(false);
+  const [timelineFeedback, setTimelineFeedback] = useState(null);
+
+  // 최종 보고서 상태
+  const [finalReportText, setFinalReportText] = useState('');
+
+  // 로컬스토리지 불러오기
+  useEffect(() => {
+    const saved = localStorage.getItem('history_detective_data');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.nickname) setNickname(data.nickname);
+        if (data.score !== undefined) setScore(data.score);
+        if (data.unlockedCases) setUnlockedCases(data.unlockedCases);
+        if (data.solvedCases) setSolvedCases(data.solvedCases);
+        if (data.cluesCollected) setCluesCollected(data.cluesCollected);
+        if (data.finalReportText) setFinalReportText(data.finalReportText);
+      } catch(e) { console.error(e); }
+    }
+    resetTimelineCards();
+  }, []);
+
+  // 상태 변경 시 저장
+  useEffect(() => {
+    const data = { nickname, score, unlockedCases, solvedCases, cluesCollected, finalReportText };
+    localStorage.setItem('history_detective_data', JSON.stringify(data));
+  }, [nickname, score, unlockedCases, solvedCases, cluesCollected, finalReportText]);
+
+  const resetTimelineCards = () => {
+    const shuffled = [...INITIAL_TIMELINE_CARDS].sort(() => Math.random() - 0.5);
+    setTimelineOrder(shuffled);
+  };
+
+  const getRank = (sc) => {
+    if (sc >= 600) return { title: "🏆 역사 사건 해결사", color: "text-amber-400" };
+    if (sc >= 400) return { title: "🕵️ 전문 역사 탐정", color: "text-yellow-400" };
+    if (sc >= 200) return { title: "📚 역사 탐정", color: "text-blue-400" };
+    return { title: "🔎 견습 탐정", color: "text-gray-300" };
+  };
+
+  const handleSelectCase = (index) => {
+    if (index + 1 > unlockedCases) {
+      alert("🔒 이전 사건을 먼저 해결해야 접근할 수 있습니다!");
+      return;
+    }
+    setCurrentCaseIdx(index);
+    setEvidenceStep(0);
+    setSelectedAnswer(null);
+    setCaseSolved(solvedCases[index]);
+    setAttemptCount(0);
+    setCaseFeedback('');
+    setScreen('case_detail');
+  };
+
+  const handleCollectClue = (clueText, isQuestionOption = false) => {
+    if (!clueText) return;
+    if (!cluesCollected.includes(clueText)) {
+      setCluesCollected(prev => [...prev, clueText]);
+      setScore(s => s + 10);
+    }
+  };
+
+  // 💡 [버그 수정 완료] 함수명 일치 - handleSubmitCaseAnswer
+  const handleSubmitCaseAnswer = () => {
+    const currentCase = CASES_DATA[currentCaseIdx];
+    if (selectedAnswer === null) {
+      alert("추리 정답을 선택해주세요!");
+      return;
+    }
+
+    const newAttempts = attemptCount + 1;
+    setAttemptCount(newAttempts);
+
+    if (selectedAnswer === currentCase.answerIndex) {
+      let earnedPoints = 50;
+      if (newAttempts === 2) earnedPoints = 30;
+      if (newAttempts >= 3) earnedPoints = 20;
+
+      if (!solvedCases[currentCaseIdx]) {
+        const nextSolved = [...solvedCases];
+        nextSolved[currentCaseIdx] = true;
+        setSolvedCases(nextSolved);
+        
+        let bonus = 0;
+        if (nextSolved.every(v => v === true)) {
+          bonus += 100;
+        }
+        setScore(s => s + earnedPoints + bonus);
+        
+        if (unlockedCases < currentCaseIdx + 2) {
+          setUnlockedCases(currentCaseIdx + 2);
+        }
+      }
+      setCaseSolved(true);
+      setCaseFeedback("success");
+    } else {
+      setCaseFeedback("wrong");
+    }
+  };
+
+  const handleNextStepFromCase = () => {
+    if (currentCaseIdx < 5) {
+      handleSelectCase(currentCaseIdx + 1);
+    } else {
+      resetTimelineCards();
+      setTimelineSubmitted(false);
+      setTimelineFeedback(null);
+      setScreen('timeline');
+    }
+  };
+
+  // 드래그 앤 드롭
+  const handleDragStart = (e, index) => {
+    setDraggedItemIndex(index);
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", index); // Firefox 호환성 추가
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, targetIndex) => {
+    e.preventDefault();
+    if (draggedItemIndex === null || draggedItemIndex === targetIndex) return;
+
+    const updated = [...timelineOrder];
+    const [draggedItem] = updated.splice(draggedItemIndex, 1);
+    updated.splice(targetIndex, 0, draggedItem);
+
+    setDraggedItemIndex(null);
+    setTimelineOrder(updated);
+  };
+
+  const handleCheckTimeline = () => {
+    const userOrderIDs = timelineOrder.map(c => c.id);
+    let correctCount = 0;
+    for (let i = 0; i < 6; i++) {
+      if (userOrderIDs[i] === CORRECT_TIMELINE_ORDER[i]) correctCount++;
+    }
+
+    let points = 20;
+    let title = "";
+    if (correctCount === 6) { points = 100; title = "🏆 완벽한 복원!"; }
+    else if (correctCount === 5) { points = 80; title = "🌟 거의 완벽합니다!"; }
+    else if (correctCount === 4) { points = 60; title = "👍 좋은 추리입니다!"; }
+    else if (correctCount === 3) { points = 40; title = "🔎 조금 더 단서를 확인해보세요!"; }
+    else { points = 20; title = "📓 탐정 수첩을 다시 확인해보세요!"; }
+
+    if (!timelineSubmitted) {
+      setScore(s => s + points);
+    }
+
+    setTimelineSubmitted(true);
+    setTimelineFeedback({ count: correctCount, points: points, title: title });
+  };
+
+  const handleSubmitReport = (e) => {
+    e.preventDefault();
+    if (finalReportText.trim().length < 30) {
+      alert("탐정으로서의 생각을 최소 30자 이상 작성해주세요!");
+      return;
+    }
+    setScreen('result');
+  };
+
+  const handleResetApp = () => {
+    if (confirm("모든 진도와 점수를 초기화하고 처음부터 다시 시작하시겠습니까?")) {
+      localStorage.removeItem('history_detective_data');
+      setNickname('');
+      setScore(0);
+      setUnlockedCases(1);
+      setSolvedCases([false, false, false, false, false, false]);
+      setCluesCollected([]);
+      setFinalReportText('');
+      setScreen('home');
+    }
+  };
+
+  // ==========================================
+  // 3. 뷰 렌더링
+  // ==========================================
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-6 min-h-screen flex flex-col justify-between">
+      {screen !== 'home' && screen !== 'nickname' && screen !== 'teacher_mode' && (
+        <header className="detective-card p-4 rounded-xl mb-6 flex items-center justify-between border-b-2 border-amber-600">
+          <button 
+            onClick={() => setShowNotebook(true)}
+            className="flex items-center gap-2 bg-amber-950 hover:bg-amber-900 text-amber-200 px-3 py-2 rounded-lg text-sm md:text-base border border-amber-700 transition"
+          >
+            <i className="fa-solid fa-book-bookmark text-amber-400"></i>
+            <span>📓 탐정 수첩 ({cluesCollected.length})</span>
+          </button>
+          
+          <div className="font-bold text-amber-100 text-sm md:text-lg">
+            {screen === 'case_detail' && `${CASES_DATA[currentCaseIdx].code} / 06`}
+            {screen === 'timeline' && "🔥 FINAL MISSION"}
+            {screen === 'final_report' && "🧠 사건 보고서"}
+            {screen === 'result' && "🏆 사건 수사 완료"}
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="bg-amber-500/20 text-amber-300 font-bold px-3 py-1.5 rounded-full border border-amber-500/40 text-sm md:text-base">
+              ⭐ {score}점
+            </div>
+            <button 
+              onClick={() => setScreen('case_list')} 
+              className="text-gray-400 hover:text-white text-sm underline"
+            >
+              목록
+            </button>
+          </div>
+        </header>
+      )}
+
+      {/* --- 화면: HOME --- */}
+      {screen === 'home' && (
+        <div className="detective-card p-8 md:p-12 rounded-2xl text-center my-auto flex flex-col items-center border border-amber-800/40 shadow-2xl">
+          <div className="text-6xl mb-4 animate-bounce">🔎</div>
+          <h2 className="text-xl md:text-2xl font-bold text-amber-500 mb-2">역사탐정</h2>
+          <h1 className="text-3xl md:text-5xl font-extrabold text-amber-100 mb-6 tracking-tight">
+            제2차 세계대전 사건파일
+          </h1>
+          <p className="text-amber-200/80 text-lg md:text-xl max-w-lg mb-8 leading-relaxed font-serif italic">
+            "흩어진 단서를 모아<br/>제2차 세계대전의 진실을 밝혀라!"
+          </p>
+          <button 
+            onClick={() => setScreen(nickname ? 'case_list' : 'nickname')}
+            className="w-full max-w-xs bg-amber-600 hover:bg-amber-500 text-amber-950 font-extrabold text-xl py-4 px-8 rounded-xl shadow-lg transform transition hover:-translate-y-1"
+          >
+            [탐정 활동 시작]
+          </button>
+          
+          <div className="mt-12 flex items-center gap-4 text-xs text-gray-400">
+            <span>중학교 2학년 역사</span>
+            <span>•</span>
+            <button onClick={() => setScreen('teacher_mode')} className="hover:text-amber-400 underline">
+              [교사용 모드]
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* --- 화면: 닉네임 --- */}
+      {screen === 'nickname' && (
+        <div className="detective-card p-8 rounded-2xl text-center my-auto max-w-md mx-auto w-full">
+          <div className="text-5xl mb-4">🕵️‍♂️</div>
+          <h2 className="text-2xl font-bold text-amber-400 mb-2">탐정님의 이름을 알려주세요</h2>
+          <p className="text-gray-400 text-sm mb-6">수사 보고서에 기록될 닉네임을 입력합니다.</p>
+          
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            if(!nickname.trim()) { alert("닉네임을 입력해주세요!"); return; }
+            setScreen('case_list');
+          }}>
+            <input 
+              type="text" 
+              placeholder="탐정 이름" 
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              className="w-full bg-stone-900 border border-amber-700/60 rounded-xl px-4 py-3 text-center text-amber-100 text-lg focus:outline-none focus:border-amber-400 mb-6"
+              autoFocus
+            />
+            <button 
+              type="submit"
+              className="w-full bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold text-lg py-3 rounded-xl transition"
+            >
+              [사건파일 열기]
+            </button>
+          </form>
+        </div>
+      )}
+
+      {/* --- 화면: 사건 목록 --- */}
+      {screen === 'case_list' && (
+        <div className="space-y-6">
+          <div className="flex items-center justify-between border-b border-stone-700 pb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-amber-400 flex items-center gap-2">
+                <span>📁 사건파일 목록</span>
+              </h2>
+              <p className="text-stone-400 text-sm">탐정: <span className="text-amber-200 font-bold">{nickname}</span>님</p>
+            </div>
+            <button 
+              onClick={() => setScreen('teacher_mode')}
+              className="text-xs text-stone-400 hover:text-amber-400 border border-stone-700 px-3 py-1.5 rounded-lg"
+            >
+              교사용 안내
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {CASES_DATA.map((c, idx) => {
+              const isUnlocked = idx + 1 <= unlockedCases;
+              const isSolved = solvedCases[idx];
+              let statusBadge = <span className="text-stone-500 font-bold">🔒 잠김</span>;
+              if (isSolved) statusBadge = <span className="text-emerald-400 font-bold">✅ 해결 완료</span>;
+              else if (isUnlocked) statusBadge = <span className="text-amber-400 font-bold animate-pulse">🔎 조사 중</span>;
+
+              return (
+                <div 
+                  key={c.id}
+                  onClick={() => isUnlocked && handleSelectCase(idx)}
+                  className={`detective-card p-5 rounded-xl border transition cursor-pointer relative overflow-hidden flex flex-col justify-between ${
+                    isUnlocked ? 'border-amber-700/60 hover:border-amber-500 hover:scale-[1.01]' : 'opacity-50 border-stone-800 cursor-not-allowed'
+                  }`}
+                >
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-mono px-2 py-0.5 rounded bg-stone-800 text-amber-300 border border-amber-900/50">
+                        {c.code}
+                      </span>
+                      {statusBadge}
+                    </div>
+                    <h3 className="text-lg font-bold text-stone-100 mb-1">{c.title}</h3>
+                    <p className="text-xs text-stone-400 line-clamp-2">{c.subtitle}</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-stone-800 flex justify-between items-center text-xs text-amber-500/80">
+                    <span>{c.year}년 사건</span>
+                    <span>{isUnlocked ? "사건 수사하기 →" : "이전 사건 해결 필요"}</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {solvedCases.every(v => v === true) && (
+            <div className="detective-card p-6 rounded-xl border border-amber-500 text-center bg-amber-950/40">
+              <h3 className="text-xl font-bold text-amber-300 mb-2">🏆 모든 6개 사건파일 해결 완료!</h3>
+              <p className="text-stone-300 text-sm mb-4">이제 역사의 시간선을 원래대로 복원할 마지막 미션에 도전하세요.</p>
+              <button 
+                onClick={() => { resetTimelineCards(); setScreen('timeline'); }}
+                className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold px-6 py-3 rounded-xl text-lg shadow-lg"
+              >
+                🔥 FINAL MISSION : 타임라인 복원 시작
+              </button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* --- 화면: 사건 수사(Case) --- */}
+      {screen === 'case_detail' && (
+        <div className="space-y-6">
+          <div className="detective-card p-6 rounded-2xl border-l-4 border-amber-500">
+            <div className="text-xs text-amber-400 font-mono mb-1">{CASES_DATA[currentCaseIdx].code}</div>
+            <h2 className="text-2xl font-bold text-stone-100 mb-2">{CASES_DATA[currentCaseIdx].title}</h2>
+            <p className="text-stone-300 text-sm leading-relaxed bg-stone-950/50 p-3 rounded-lg border border-stone-800">
+              💬 <strong>사건 브리핑:</strong> {CASES_DATA[currentCaseIdx].briefing}
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-bold text-amber-300">🔍 사건 자료 분석 및 단서 수집</h3>
+
+            {CASES_DATA[currentCaseIdx].evidences.map((ev, eIdx) => {
+              const isOpen = eIdx <= evidenceStep;
+              return (
+                <div key={ev.id} className="detective-card rounded-xl border border-stone-700/60 overflow-hidden">
+                  <div 
+                    onClick={() => {
+                      if (eIdx === evidenceStep + 1) {
+                        setEvidenceStep(eIdx);
+                        setScore(s => s + 10);
+                      }
+                    }}
+                    className={`p-4 flex justify-between items-center ${isOpen ? 'bg-stone-900/90' : 'bg-stone-950/40 cursor-pointer hover:bg-stone-900/50'}`}
+                  >
+                    <span className="font-bold text-stone-200">{ev.title}</span>
+                    <span className="text-xs px-2 py-1 rounded bg-stone-800 text-stone-400">
+                      {isOpen ? "분석 완료" : `자료 열기 (+10점)`}
+                    </span>
+                  </div>
+
+                  {isOpen && (
+                    <div className="p-5 border-t border-stone-800 space-y-3 bg-stone-900/30">
+                      <p className="text-stone-300 text-sm leading-relaxed">{ev.content}</p>
+                      
+                      {ev.question && (
+                        <div className="bg-amber-950/30 p-3 rounded-lg border border-amber-800/40 text-xs md:text-sm">
+                          <p className="font-bold text-amber-200 mb-2">❓ {ev.question}</p>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {ev.options.map((opt, oIdx) => (
+                              <button 
+                                key={oIdx}
+                                onClick={() => {
+                                  if (oIdx === ev.correctIndex) {
+                                    alert(`🎯 정확한 단서 발견! (+10점)\n[단서: ${ev.clue}]`);
+                                    handleCollectClue(ev.clue, true);
+                                  } else {
+                                    alert("❌ 올바른 단서가 아닙니다. 다시 분석해보세요!");
+                                  }
+                                }}
+                                className="text-left bg-stone-800 hover:bg-stone-700 p-2 rounded border border-stone-700 text-stone-200 text-xs"
+                              >
+                                {oIdx + 1}. {opt}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {!ev.question && (
+                        <div className="flex justify-end">
+                          <button 
+                            onClick={() => {
+                              alert(`📌 탐정 수첩에 단서 수집 완료! (+10점)\n[단서: ${ev.clue}]`);
+                              handleCollectClue(ev.clue);
+                            }}
+                            className="bg-amber-800 hover:bg-amber-700 text-amber-100 text-xs font-bold px-3 py-1.5 rounded-md border border-amber-600"
+                          >
+                            단서 수집하기
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="detective-card p-6 rounded-2xl border-2 border-amber-600/60 space-y-4">
+            <h3 className="text-xl font-bold text-amber-400">🧠 사건 추리 문제</h3>
+            <p className="text-stone-200 font-medium text-base md:text-lg">
+              "{CASES_DATA[currentCaseIdx].question}"
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
+              {CASES_DATA[currentCaseIdx].options.map((opt, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSelectedAnswer(idx)}
+                  className={`p-4 rounded-xl text-left border font-semibold transition flex items-center gap-3 ${
+                    selectedAnswer === idx 
+                      ? 'bg-amber-500 text-stone-950 border-amber-400 shadow-md scale-[1.01]'
+                      : 'bg-stone-900 text-stone-200 border-stone-700 hover:border-amber-600'
+                  }`}
+                >
+                  <span className="w-6 h-6 rounded-full bg-stone-800 text-amber-400 flex items-center justify-center text-xs font-bold border border-amber-900">
+                    {idx + 1}
+                  </span>
+                  <span>{opt}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* 💡 수정한 부분: handleSubmitCaseAnswer 호출 */}
+            {!caseSolved && (
+              <div className="pt-4 flex justify-end">
+                <button
+                  onClick={handleSubmitCaseAnswer}
+                  className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-6 py-3 rounded-xl text-base shadow-lg transition"
+                >
+                  사건 추리 제출하기
+                </button>
+              </div>
+            )}
+
+            {caseFeedback === 'wrong' && (
+              <div className="p-4 bg-red-950/60 border border-red-700 text-red-200 rounded-xl text-sm flex items-center justify-between">
+                <span>❌ 오답입니다. 수첩의 단서를 다시 확인하고 재도전해보세요!</span>
+                <span className="text-xs bg-red-900 px-2 py-1 rounded">재도전 가능</span>
+              </div>
+            )}
+
+            {caseSolved && (
+              <div className="p-6 bg-emerald-950/60 border-2 border-emerald-500 rounded-xl space-y-3">
+                <div className="text-emerald-400 font-extrabold text-xl">🎉 사건 해결 성공!</div>
+                <p className="text-stone-200 text-sm leading-relaxed">{CASES_DATA[currentCaseIdx].explanation}</p>
+                <div className="pt-3 flex justify-end">
+                  <button
+                    onClick={handleNextStepFromCase}
+                    className="bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-extrabold px-6 py-2.5 rounded-xl transition"
+                  >
+                    {currentCaseIdx < 5 ? "다음 사건으로 →" : "최종 미션 도전하기 →"}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* --- 화면: 미니게임 (타임라인) --- */}
+      {screen === 'timeline' && (
+        <div className="space-y-6">
+          <div className="detective-card p-6 rounded-2xl border border-amber-500 text-center space-y-2">
+            <span className="text-xs font-mono px-3 py-1 rounded bg-amber-950 text-amber-400 border border-amber-700">FINAL MISSION</span>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-amber-200">역사의 시간선을 복원하라!</h2>
+            <p className="text-stone-300 text-sm max-w-lg mx-auto leading-relaxed">
+              모든 사건의 단서를 모았습니다. 제2차 세계대전은 어떤 순서로 전개되었을까?<br/>카드를 드래그하여 순서대로 배열하세요.
+            </p>
+            <div className="text-amber-400 font-bold text-sm pt-2">
+              1939년 [ 침공 ] ➔ ➔ ➔ 1945년 [ 종결 ]
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {timelineOrder.map((card, idx) => (
+              <div
+                key={card.id}
+                draggable
+                onDragStart={(e) => handleDragStart(e, idx)}
+                onDragOver={(e) => handleDragOver(e, idx)}
+                onDrop={(e) => handleDrop(e, idx)}
+                className="detective-card p-4 rounded-xl border border-amber-800/60 hover:border-amber-400 cursor-grab active:cursor-grabbing flex items-center gap-4 transition bg-stone-900/80"
+              >
+                <span className="w-8 h-8 rounded-full bg-amber-950 text-amber-300 font-bold flex items-center justify-center text-sm border border-amber-700">
+                  {idx + 1}
+                </span>
+                <span className="font-bold text-stone-100 text-base md:text-lg flex-1">{card.text}</span>
+                <i className="fa-solid fa-grip-lines text-stone-500 text-xl"></i>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-between items-center pt-2">
+            <button onClick={resetTimelineCards} className="text-stone-400 hover:text-amber-300 text-sm underline">
+              🔄 카드 다시 섞기
+            </button>
+            <button onClick={handleCheckTimeline} className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-extrabold px-8 py-3 rounded-xl text-lg shadow-lg">
+              [최종 제출 및 채점]
+            </button>
+          </div>
+
+          {timelineSubmitted && timelineFeedback && (
+            <div className="detective-card p-6 rounded-2xl border-2 border-amber-500 space-y-4 bg-stone-900">
+              <div className="flex justify-between items-center border-b border-stone-800 pb-3">
+                <h3 className="text-xl font-bold text-amber-300">{timelineFeedback.title}</h3>
+                <span className="text-lg font-bold text-amber-400">+{timelineFeedback.points}점 획득</span>
+              </div>
+
+              {timelineFeedback.count < 6 ? (
+                <div className="space-y-3">
+                  <div className="p-4 bg-amber-950/40 border border-amber-700 rounded-xl text-sm space-y-2">
+                    <p className="font-bold text-amber-300">💡 힌트 (다시 생각해볼 단서):</p>
+                    <ul className="list-disc list-inside text-stone-300 text-xs space-y-1">
+                      <li>독일의 폴란드 침공은 1939년 전쟁의 시작입니다.</li>
+                      <li>진주만 공격은 1941년에 일어났습니다.</li>
+                      <li>스탈린그라드 전투의 승기는 1942~1943년에 잡혔습니다.</li>
+                      <li>노르망디 상륙작전은 1944년에 일어났습니다.</li>
+                    </ul>
+                  </div>
+                  <div className="flex justify-end">
+                    <button onClick={() => setTimelineSubmitted(false)} className="bg-stone-800 hover:bg-stone-700 text-amber-200 font-bold px-4 py-2 rounded-lg text-sm border border-stone-600">
+                      [다시 배열하기]
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4 pt-2">
+                  <p className="text-emerald-400 text-sm font-semibold">🎉 정확히 복원했습니다!</p>
+                  
+                  <div className="p-4 bg-stone-950 rounded-xl border border-stone-800 space-y-3 text-xs md:text-sm">
+                    <div className="font-bold text-amber-400 text-center mb-2">📜 연도별 실제 역사 전개 순서</div>
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-center">
+                      <div className="p-2 bg-stone-900 rounded border border-amber-900">
+                        <span className="text-amber-400 font-mono font-bold">1939년</span>
+                        <p className="text-stone-200">폴란드 침공</p>
+                      </div>
+                      <div className="p-2 bg-stone-900 rounded border border-amber-900">
+                        <span className="text-amber-400 font-mono font-bold">1940년</span>
+                        <p className="text-stone-200">영국 본토 항공전</p>
+                      </div>
+                      <div className="p-2 bg-stone-900 rounded border border-amber-900">
+                        <span className="text-amber-400 font-mono font-bold">1941년</span>
+                        <p className="text-stone-200">진주만 공격·미 참전</p>
+                      </div>
+                      <div className="p-2 bg-stone-900 rounded border border-amber-900">
+                        <span className="text-amber-400 font-mono font-bold">1942년</span>
+                        <p className="text-stone-200">스탈린그라드 전투</p>
+                      </div>
+                      <div className="p-2 bg-stone-900 rounded border border-amber-900">
+                        <span className="text-amber-400 font-mono font-bold">1944년</span>
+                        <p className="text-stone-200">노르망디 상륙작전</p>
+                      </div>
+                      <div className="p-2 bg-stone-900 rounded border border-amber-900">
+                        <span className="text-amber-400 font-mono font-bold">1945년</span>
+                        <p className="text-stone-200">세계대전 종결</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end">
+                    <button onClick={() => setScreen('final_report')} className="bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold px-6 py-3 rounded-xl text-base shadow-lg">
+                      최종 사건 보고서 작성하기 →
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* --- 화면: 최종 보고서 --- */}
+      {screen === 'final_report' && (
+        <div className="detective-card p-6 md:p-8 rounded-2xl border-2 border-amber-600/80 space-y-6">
+          <div>
+            <span className="text-xs font-mono text-amber-400">FINAL STEP</span>
+            <h2 className="text-2xl font-extrabold text-stone-100 mt-1">🧠 최종 사건 보고서</h2>
+            <p className="text-stone-300 text-sm mt-2">전체 사건을 조사한 후, 자신만의 관점을 정립해봅시다.</p>
+          </div>
+
+          <form onSubmit={handleSubmitReport} className="space-y-4">
+            <div className="bg-stone-950 p-4 rounded-xl border border-stone-800 space-y-2">
+              <label className="font-bold text-amber-300 text-base md:text-lg block">
+                "제2차 세계대전은 왜 세계적인 전쟁으로 확대되었을까?"
+              </label>
+              <textarea
+                rows="6"
+                value={finalReportText}
+                onChange={(e) => setFinalReportText(e.target.value)}
+                placeholder="탐정으로 활동하면서 알게 된 내용을 바탕으로 자신의 생각을 적어보세요. (최소 30자)"
+                className="w-full bg-stone-900 border border-stone-700 rounded-lg p-3 text-stone-100 text-sm focus:outline-none focus:border-amber-500"
+              ></textarea>
+              <div className="flex justify-between text-xs text-stone-500">
+                <span>* 최소 30자 이상 작성</span>
+                <span className={finalReportText.trim().length >= 30 ? "text-emerald-400" : "text-amber-500"}>
+                  현재 {finalReportText.trim().length} 자
+                </span>
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-2">
+              <button type="submit" className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-extrabold px-8 py-3 rounded-xl text-lg shadow-lg">
+                [최종 보고서 제출]
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* --- 화면: 결과 페이지 --- */}
+      {screen === 'result' && (
+        <div className="detective-card p-8 rounded-2xl border-2 border-amber-500 text-center space-y-6 my-auto">
+          <div className="text-6xl animate-bounce">🏆</div>
+          <div>
+            <h2 className="text-3xl font-extrabold text-amber-200 mb-1">사건 수사 완료!</h2>
+            <p className="text-xl font-bold text-stone-100">
+              <span className="text-amber-400 underline">{nickname}</span> 탐정님
+            </p>
+          </div>
+          <div className="bg-stone-950/70 p-6 rounded-xl border border-stone-800 max-w-md mx-auto space-y-4">
+            <div>
+              <span className="text-xs text-stone-400 block mb-1">해결한 사건 목록</span>
+              <div className="flex flex-wrap justify-center gap-2 text-xs font-bold">
+                {solvedCases.map((s, idx) => (
+                  <span key={idx} className={`px-2 py-1 rounded ${s ? 'bg-emerald-950 text-emerald-300 border border-emerald-700' : 'bg-stone-800 text-stone-500'}`}>
+                    CASE 0{idx+1} {s ? '✅' : '❌'}
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="border-t border-stone-800 pt-3">
+              <span className="text-xs text-stone-400">최종 획득 점수</span>
+              <div className="text-4xl font-extrabold text-amber-400 mt-1">{score} 점</div>
+            </div>
+            <div className="border-t border-stone-800 pt-3">
+              <span className="text-xs text-stone-400 block mb-1">탐정 칭호 등급</span>
+              <div className={`text-2xl font-extrabold ${getRank(score).color}`}>
+                {getRank(score).title}
+              </div>
+            </div>
+          </div>
+          <div className="p-4 bg-amber-950/40 border border-amber-800/60 rounded-xl max-w-lg mx-auto">
+            <p className="text-amber-200 font-serif italic">
+              "역사는 사건을 외우는 것이 아니라<br/>사건과 사건 사이의 연결을 이해하는 것입니다."
+            </p>
+          </div>
+          <div className="flex justify-center gap-4 pt-4">
+            <button onClick={() => setScreen('case_list')} className="bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold px-5 py-2.5 rounded-xl text-sm border border-stone-600">
+              사건 목록 확인
+            </button>
+            <button onClick={handleResetApp} className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-5 py-2.5 rounded-xl text-sm">
+              처음부터 다시하기
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* --- 화면: 교사용 모드 --- */}
+      {screen === 'teacher_mode' && (
+        <div className="detective-card p-6 rounded-2xl space-y-6">
+          <div className="flex justify-between items-center border-b border-stone-700 pb-3">
+            <h2 className="text-2xl font-bold text-amber-400">👩‍🏫 교사용 모드 및 정답 안내</h2>
+            <button onClick={() => setScreen('home')} className="bg-stone-800 hover:bg-stone-700 text-stone-200 px-3 py-1.5 rounded-lg text-sm">
+              홈으로 돌아가기
+            </button>
+          </div>
+          <div className="space-y-4 text-sm text-stone-300">
+            <div className="bg-stone-950 p-4 rounded-xl border border-stone-800">
+              <h3 className="font-bold text-amber-300 text-base mb-2">📊 점수 산정 방식 안내</h3>
+              <ul className="list-disc list-inside space-y-1 text-xs">
+                <li>자료 확인: +10점 / 단서 발견: +10점</li>
+                <li>사건 추리 정답: 1회차(+50점), 2회차(+30점), 3회차 이상(+20점)</li>
+                <li>6개 사건 전원 해결 보너스: +100점</li>
+                <li>최종 타임라인 드래그 앤 드롭: 최고 +100점 (정답 수 비례)</li>
+              </ul>
+            </div>
+            <div className="space-y-3">
+              <h3 className="font-bold text-amber-300 text-base">🔑 사건별 정답 및 핵심 해설</h3>
+              {CASES_DATA.map((c) => (
+                <div key={c.id} className="p-3 bg-stone-900 rounded-lg border border-stone-800 space-y-1">
+                  <div className="font-bold text-amber-200">{c.code}: {c.title}</div>
+                  <div className="text-xs text-emerald-400">정답: {c.answerIndex + 1}번 ({c.options[c.answerIndex]})</div>
+                  <div className="text-xs text-stone-400">{c.explanation}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- 모달: 탐정 수첩 --- */}
+      {showNotebook && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="detective-card p-6 rounded-2xl max-w-md w-full border-2 border-amber-600 max-h-[80vh] flex flex-col">
+            <div className="flex justify-between items-center border-b border-amber-800/80 pb-3 mb-4">
+              <h3 className="text-xl font-bold text-amber-300">📓 탐정 수첩 (수집된 단서)</h3>
+              <button onClick={() => setShowNotebook(false)} className="text-stone-400 hover:text-amber-200 text-xl font-bold">&times;</button>
+            </div>
+            <div className="flex-1 overflow-y-auto space-y-2 pr-1 custom-scrollbar">
+              {cluesCollected.length === 0 ? (
+                <p className="text-stone-500 text-center py-8 text-sm">수집된 단서가 없습니다.</p>
+              ) : (
+                cluesCollected.map((clue, idx) => (
+                  <div key={idx} className="p-3 bg-stone-900 rounded-lg border border-amber-900/40 text-stone-200 text-sm flex items-start gap-2">
+                    <span className="text-amber-400 font-bold">📌</span>
+                    <span>{clue}</span>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="pt-4 border-t border-stone-800 mt-4 text-right">
+              <button onClick={() => setShowNotebook(false)} className="bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold px-4 py-2 rounded-lg text-sm">
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <footer className="mt-8 text-center text-xs text-stone-600 border-t border-stone-900 pt-4">
+        제2차 세계대전 역사탐정 웹앱 • 중학교 2학년 역사 수업용 반응형 학습 매체
+      </footer>
+    </div>
+  );
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+</script>
+</body>
+</html>
