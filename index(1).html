@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사라진 인권을 찾아라 - 역사 탐정</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'paper': '#f4f1ea',
+                        'ink': '#2c2c2c',
+                        'folder': '#e6d9b8',
+                        'stamp': '#a63a3a'
+                    },
+                    fontFamily: {
+                        sans: ['"Pretendard"', '"Noto Sans KR"', 'sans-serif'],
+                        serif: ['"Nanum Myeongjo"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&display=swap');
+
+        body {
+            background-color: #e0d8c8;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d1c8b3' fill-opacity='0.4' fill-rule='evenodd'/%3E%3C/svg%3E");
+            color: #2c2c2c;
+            min-height: 100vh;
+        }
+
+        /* 3D Flip Card Styles */
+        .perspective-1000 { perspective: 1000px; }
+        .transform-style-3d { transform-style: preserve-3d; }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .transition-transform { transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid orange;
+            white-space: nowrap;
+            margin: 0 auto;
+            letter-spacing: .15em;
+            animation: typing 2s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink-caret { from, to { border-color: transparent } 50% { border-color: orange; } }
+
+        /* Custom Scrollbar for Note */
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c1b59c; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #a89a7a; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const CASES_DATA = [
+            {
+                id: 'case1',
+                mysteryTitle: 'CASE 01\n“도시에서 사라진 사람들”',
+                desc: '1930년대 후반부터 유럽의 여러 지역에서 이상한 일들이 벌어지기 시작했습니다. 특정 사람들은 시민으로서의 권리를 잃었고, 자신이 살던 곳에서 쫓겨나거나 특정 지역으로 이동하도록 강요받았습니다. 이 사건의 정체를 밝혀보세요.',
+                difficulty: 2,
+                clues: [
+                    { id: 'c1_1', title: '시대', icon: '🕰️', content: '1933년, 독일에서 새로운 정권이 등장했습니다. 이 정권은 특정 집단을 인종적으로 구분하고 차별하는 정책을 추진했습니다.', question: '단순한 전쟁 사건일까, 아니면 특정 집단을 대상으로 한 정책과 관련 있을까?' },
+                    { id: 'c1_2', title: '사라진 권리', icon: '⚖️', content: '어떤 사람들은 법과 제도에 의해 시민으로서 누리던 권리를 제한받기 시작했습니다. 학교, 직업, 공공시설 이용 등 일상생활에서도 차별이 확대되었습니다.', question: '전쟁이 시작되기 전부터 어떤 일이 진행되고 있었을까?' },
+                    { id: 'c1_3', title: '이상한 도시 구역', icon: '🗺️', isMap: true, mapText: '바르샤바 / 폴란드', content: '도시의 특정 지역에 유대인들이 강제로 모여 살게 되었습니다. 사람들은 자유롭게 그 지역을 떠날 수 없었습니다. 생활공간은 매우 좁았고 식량과 의료도 부족했습니다.', question: '탐정 키워드: 게토\n실제 역사적으로 나치와 협력 세력은 유대인을 게토에 강제로 수용해 격리·통제했으며, 게토화는 박해와 대량 학살로 이어지는 중요한 단계였습니다.' },
+                    { id: 'c1_4', title: '열차', icon: '🚂', content: '사람들은 열차를 타고 자신이 살던 지역에서 멀리 떨어진 곳으로 강제로 이동되었습니다. 당시 당국은 이를 "이주" 또는 "재정착"과 같은 표현으로 설명하기도 했습니다.', question: '이 사람들은 정말 스스로 새로운 곳으로 이주한 것일까?' },
+                    { id: 'c1_5', title: '결정적 기록', icon: '📁', isDecisive: true, content: '1941년 이후 나치 지도부는 유럽의 유대인을 조직적으로 살해하는 정책을 추진했습니다. 게토에 갇힌 사람들을 포함한 많은 유대인이 강제 이주와 학살의 대상이 되었습니다.', question: '이 모든 정책과 행동이 가리키는 최종적인 사건은 무엇일까?' }
+                ],
+                options: [
+                    { id: 'A', text: '산업혁명' },
+                    { id: 'B', text: '홀로코스트' },
+                    { id: 'C', text: '냉전' },
+                    { id: 'D', text: '베를린 장벽 건설' }
+                ],
+                correctAnswer: 'B',
+                realName: '홀로코스트',
+                resolutionFlow: '1933 → 차별 → 게토화 → 강제 이주·추방 → 조직적인 학살',
+                explanation: '홀로코스트는 나치 독일과 그 동맹·협력 세력이 유럽의 유대인을 조직적으로 박해하고 학살한 사건입니다. 중요한 점은 대규모 학살이 갑자기 시작된 것이 아니라 차별과 배제, 격리, 강제 이주와 추방 등이 이어지는 과정 속에서 확대되었다는 것입니다.',
+                humanRightsQ: '이 사건에서 가장 먼저 사라진 것은 무엇이었을까?',
+                humanRightsOpts: ['인간의 존엄', '평등', '자유', '안전', '재산권'],
+                humanRightsFeedback: '특정 집단이라는 이유만으로 권리를 제한하고 차별하는 것은 인간의 존엄과 평등을 심각하게 침해하는 문제입니다.',
+                teacherHint: '학생들이 홀로코스트를 단순히 "유대인 학살"로만 이해하지 않도록 지도해 주세요. 차별 → 배제 → 격리 → 강제 이주·추방 → 대량 학살이라는 점진적인 과정에 주목하게 하는 것이 중요합니다.'
+            },
+            {
+                id: 'case2',
+                mysteryTitle: 'CASE 02\n“집을 떠나야 했던 사람들”',
+                desc: '특정 하나의 사건이 아닙니다. 제2차 세계대전 전후 유럽 전역에서 벌어진 거대한 흐름을 추적하세요.',
+                difficulty: 3,
+                clues: [
+                    { id: 'c2_1', title: '지도', icon: '🗺️', isMap: true, mapText: '유럽 전역', content: '수많은 화살표가 유럽 곳곳을 교차하며 거대한 인구 이동을 보여줍니다.', question: '왜 이렇게 많은 사람들이 동시에 이동하고 있을까?' },
+                    { id: 'c2_2', title: '가방 하나', icon: '🧳', content: '한 가족이 급하게 집을 떠났습니다. 가지고 갈 수 있는 물건은 많지 않았습니다. 그들이 원해서 떠난 것은 아니었습니다.', question: '여행과 강제 이주는 어떻게 다를까?' },
+                    { id: 'c2_3', title: '명령서', icon: '📜', content: '[이주 명령]\n1. 지정된 기간 안에 현재 거주지를 떠나야 한다.\n2. 이동할 수 있는 물품에는 제한이 있다.\n3. 지정된 장소로 이동해야 한다.', question: '이 사람들에게 선택권이 있었을까?' },
+                    { id: 'c2_4', title: '삶의 흔적', icon: '🏚️', content: '비어 있는 집, 붐비는 철도역, 버려진 여행 가방... 전쟁과 점령, 정치적 정책 등으로 인해 수많은 사람들이 삶의 터전을 잃고 다른 지역으로 쫓겨나듯 이동해야 했습니다.', question: '이러한 이동은 개인의 삶에 어떤 영향을 미쳤을까?' },
+                    { id: 'c2_5', title: '결정적 단서', icon: '📁', isDecisive: true, content: '자발적 의지가 아닌 국가의 권력이나 전쟁의 폭력에 의해 강제로 거주지를 옮겨야 했던 수많은 사례들의 집합입니다.', question: '이 사건들의 공통된 특징을 가장 잘 설명하는 단어는 무엇일까?' }
+                ],
+                options: [
+                    { id: 'A', text: '자발적인 여행' },
+                    { id: 'B', text: '관광' },
+                    { id: 'C', text: '강제 이주와 추방' },
+                    { id: 'D', text: '유학' }
+                ],
+                correctAnswer: 'C',
+                realName: '강제 이주 및 추방',
+                resolutionFlow: '전쟁/정책 → 거주지 상실 → 강제 이동 → 난민 발생 → 공동체 파괴',
+                explanation: '제2차 세계대전기와 전후에는 전쟁, 점령, 국경 변화, 인종·민족 정책 등과 관련해 수많은 사람들이 강제로 이동하거나 추방되었습니다. 전쟁은 단순히 전투의 문제가 아니라 사람들의 집과 가족, 공동체를 완전히 무너뜨릴 수 있다는 점을 시사합니다.',
+                humanRightsQ: '내가 살던 집을 내 의지와 상관없이 떠나야 한다면 무엇을 잃게 될까? (다중 선택 가능)',
+                humanRightsOpts: ['가족과 공동체', '집과 재산', '학교와 직업', '익숙한 생활', '안전'],
+                humanRightsFeedback: '강제 이주는 물리적인 집을 잃는 것뿐만 아니라, 인간이 삶을 영위하는 데 필요한 모든 안전망과 정체성의 기반을 송두리째 빼앗는 인권 침해입니다.',
+                teacherHint: '하나의 고유명사 사건이 아니라 전쟁이 만들어내는 보편적인 비극(난민, 강제 이주)의 구조를 이해하도록 도와주세요.'
+            },
+            {
+                id: 'case3',
+                mysteryTitle: 'CASE 03\n“1937년, 한 도시에서 무슨 일이 있었을까?”',
+                desc: '동아시아의 거대한 대륙에서 벌어진 비극적인 사건의 단서를 모아보세요.',
+                difficulty: 2,
+                clues: [
+                    { id: 'c3_1', title: '연도', icon: '📅', content: '1937년', question: '1937년 동아시아에서는 어떤 큰 전쟁이 진행되고 있었을까? (힌트: 중국, 일본, 전쟁)' },
+                    { id: 'c3_2', title: '지도', icon: '🗺️', isMap: true, mapText: '중국 동부 특정 도시 (?)', content: '지도의 한 지점에 큰 물음표가 쳐져 있습니다. 이 도시는 한때 중국의 중요한 중심지였습니다.', question: '이 도시는 중국의 어느 지역에 있을까?' },
+                    { id: 'c3_3', title: '점령', icon: '⚔️', content: '1937년 일본군이 이 도시를 점령했습니다. 점령 이후 민간인과 포로 등을 대상으로 심각한 인권 침해가 발생했습니다.', question: '전쟁에서 도시가 점령되면 군인뿐 아니라 민간인의 삶에도 어떤 일이 생길까?' },
+                    { id: 'c3_4', title: '서로 다른 기록', icon: '📑', content: '자료 A: 당시 도시에 남았던 외국인들의 기록\n자료 B: 살아남은 중국인들의 증언\n자료 C: 전후 조사 자료\n모든 기록이 공통적으로 군인뿐 아닌 민간인의 대규모 피해를 말하고 있습니다.', question: '왜 여러 입장의 사람들이 비슷한 내용의 기록을 남겼을까?' },
+                    { id: 'c3_5', title: '결정적 단서', icon: '📁', isDecisive: true, content: '이 사건은 1937년 점령 과정에서 일본군에 의해 발생한 대규모 학살과 전쟁범죄를 가리킵니다. 관련 자료는 UNESCO 세계기록유산에도 등재되어 역사적 기억으로 보존되고 있습니다.', question: '이 참혹한 사건의 이름은 무엇일까?' }
+                ],
+                options: [
+                    { id: 'A', text: '난징 대학살' },
+                    { id: 'B', text: '프랑스 혁명' },
+                    { id: 'C', text: '베를린 봉쇄' },
+                    { id: 'D', text: '진주만 공격' }
+                ],
+                correctAnswer: 'A',
+                realName: '난징 대학살',
+                resolutionFlow: '1937 → 중일전쟁 → 난징 점령 → 대규모 민간인 피해 → 잊지 않기 위한 기록',
+                explanation: '1937년 말부터 이듬해 초까지 난징을 점령한 일본군에 의해 수많은 중국인 포로와 민간인이 학살당하고 심각한 폭력을 겪은 사건입니다. 이 사건의 기록들은 전쟁범죄를 증명하고 인권의 소중함을 경고하는 중요한 인류의 유산입니다.',
+                humanRightsQ: '전쟁 중이라 하더라도 민간인의 생명과 안전은 어떻게 다루어져야 할까?',
+                humanRightsOpts: ['국제법으로 엄격히 보호되어야 한다', '전쟁 중이므로 어쩔 수 없다', '이긴 쪽의 마음대로 할 수 있다', '군인과 똑같이 취급해야 한다'],
+                humanRightsFeedback: '국제 인도법은 무력 충돌 시에도 민간인을 보호하도록 규정하고 있습니다. 전쟁이라는 극단적인 상황에서도 지켜야 할 최소한의 인간 존엄이 존재합니다.',
+                teacherHint: '전시 민간인 보호 원칙과 세계기록유산 등재의 의미(과거의 잘못을 기록하고 기억하여 반복하지 않으려는 노력)를 연결하여 설명해 주시면 좋습니다.'
+            },
+            {
+                id: 'case4',
+                mysteryTitle: 'CASE 04\n“기록 속에서 찾은 목소리”',
+                desc: '오랜 시간 침묵을 강요받았던 사람들의 목소리가 기록으로 남아 우리에게 도달했습니다.',
+                difficulty: 3,
+                clues: [
+                    { id: 'c4_1', title: '전쟁', icon: '🌏', isMap: true, mapText: '한반도, 중국, 동남아시아', content: '1930년대부터 1945년까지, 일본 제국의 전쟁과 점령이 광범위하게 확대되던 시기입니다.', question: '전쟁은 군인뿐 아니라 민간인의 삶에도 어떤 광범위한 영향을 미칠까?' },
+                    { id: 'c4_2', title: '사라진 일상', icon: '👤', content: '수많은 여성과 소녀들이 자신의 의사에 반하여, 속거나 강압에 의해 고향을 떠나야 했고 심각한 인권 침해와 착취를 경험했습니다.', question: '개인의 일상과 꿈이 전쟁이라는 거대한 폭력 앞에서 어떻게 무너졌을까?' },
+                    { id: 'c4_3', title: '증언', icon: '🗣️', content: '"피해자들은 전쟁이 끝난 뒤에도 오랫동안 자신의 경험을 말하기 어려운 사회적 상황에 놓였습니다. 수십 년이 지난 후, 일부 용기 있는 피해자들이 침묵을 깨고 자신의 경험을 증언하기 시작하면서 이 문제가 세상에 알려졌습니다."', question: '왜 피해자 스스로 목소리를 내고 그것을 기록하는 것이 중요할까?' },
+                    { id: 'c4_4', title: '기억의 공간', icon: '🏛️', content: '오늘날 세계 곳곳에는 이 사건을 기리는 평화의 소녀상과 같은 기념 조형물, 박물관, 기록관이 세워져 있습니다.', question: '사람들은 왜 아픈 과거의 피해를 기억하는 공간을 애써 만들까?' },
+                    { id: 'c4_5', title: '결정적 단서', icon: '📁', isDecisive: true, content: '제2차 세계대전 당시 일본군의 조직적인 관여 아래, 수많은 아시아 지역의 여성과 소녀들이 강제로 동원되어 성착취를 당한 끔찍한 인권 침해 문제입니다.', question: '이 중대한 전쟁범죄 사건을 무엇이라고 부를까?' }
+                ],
+                options: [
+                    { id: 'A', text: '여성 참정권 운동' },
+                    { id: 'B', text: '일본군 \'위안부\' 문제' },
+                    { id: 'C', text: '산업혁명' },
+                    { id: 'D', text: '국제연맹' }
+                ],
+                correctAnswer: 'B',
+                realName: '일본군 \'위안부\' 문제',
+                resolutionFlow: '제국주의 전쟁 → 강제 동원과 착취 → 오랜 침묵 → 용기 있는 증언 → 국제적 인권 문제로 대두',
+                explanation: '전쟁이라는 이름 아래 국가 권력이 개입하여 여성의 존엄성을 짓밟은 심각한 인권 침해 사건입니다. 피해자들의 용기 있는 증언을 통해 단순한 과거의 일이 아닌, 전시 여성 폭력 근절이라는 현대 인권 운동의 중요한 상징이 되었습니다.',
+                humanRightsQ: '이 사건을 우리가 오늘날에도 반드시 기억해야 하는 가장 중요한 이유는 무엇일까?',
+                humanRightsOpts: ['피해자의 잃어버린 존엄을 회복하고 기억하기 위해', '전쟁에서 발생하는 여성에 대한 폭력을 이해하기 위해', '용기 내어 말한 피해자의 목소리를 잊지 않기 위해', '같은 비극이 미래에 반복되지 않도록 경계하기 위해'],
+                humanRightsFeedback: '여러분이 선택한 모든 이유가 정답입니다. 아픈 역사를 기억하는 것은 단순한 과거 회상이 아니라 더 나은 미래, 평화로운 세상을 만들기 위한 적극적인 행동입니다.',
+                teacherHint: '사건의 선정성이나 자극적인 면보다는 인권 침해의 구조적인 문제, 그리고 피해자들의 주체적인 증언 활동(인권 운동가로서의 삶)에 초점을 맞추어 교육해 주세요.'
+            },
+            {
+                id: 'case5',
+                mysteryTitle: 'CASE 05\n“과학은 누구를 위해 존재하는가?”',
+                desc: '비밀스럽게 감춰졌던 연구 시설의 흔적을 찾아 그 안에서 벌어진 비극을 밝혀내세요.',
+                difficulty: 3,
+                clues: [
+                    { id: 'c5_1', title: '장소', icon: '📍', isMap: true, mapText: '중국 하얼빈 주변', content: '지도의 외딴 지역. 일반인의 출입이 엄격히 통제된 거대한 구역이 있었습니다.', question: '전쟁 중 이토록 은밀하게 통제된 지역에서는 어떤 활동이 이루어졌을까?' },
+                    { id: 'c5_2', title: '연구 시설', icon: '🔬', content: '이곳에 주둔한 한 군사 조직은 첨단 장비를 갖추고 생물학 및 의학과 관련된 다양한 연구를 진행했습니다.', question: '전쟁을 이기기 위해 과학 기술은 어떤 방식으로 이용될 수 있을까?' },
+                    { id: 'c5_3', title: '연구 대상', icon: '👤', content: '가장 충격적인 사실은, 이들의 연구에 포로나 민간인 등 사람을 대상으로 한 강제적이고 비인도적인 실험이 포함되어 있었다는 점입니다.', question: '인간의 생명을 구해야 할 의학과 과학이 도구가 되었을 때 어떤 비극이 발생할까?' },
+                    { id: 'c5_4', title: '숨겨진 기록', icon: '🤐', content: '전쟁이 끝난 후 관련자들은 처벌을 피하기 위해 자료를 은폐하거나 파기했습니다. 하지만 남겨진 문서와 관계자들의 뒤늦은 증언으로 실체가 드러났습니다.', question: '아무리 감추려 해도 진실이 중요한 이유는 무엇일까?' },
+                    { id: 'c5_5', title: '결정적 단서', icon: '📁', isDecisive: true, content: '제2차 세계대전 기간 중국 만주 지역에서 세균전 준비 등을 목적으로 살아있는 사람을 대상으로 잔혹한 생체 실험을 자행한 일본 제국 육군의 비밀 부대입니다.', question: '이 악명 높은 비밀 부대의 이름은 무엇일까?' }
+                ],
+                options: [
+                    { id: 'A', text: '731부대' },
+                    { id: 'B', text: '국제연맹' },
+                    { id: 'C', text: '나치 청소년단' },
+                    { id: 'D', text: '적십자' }
+                ],
+                correctAnswer: 'A',
+                realName: '731부대',
+                resolutionFlow: '비밀 군사 연구 → 비인도적 인체 실험 → 전쟁범죄 은폐 시도 → 진실 규명과 과학 윤리 성찰',
+                explanation: '731부대 사건은 승리를 위해 수단과 방법을 가리지 않는 전쟁의 야만성을 극명하게 보여줍니다. 생명을 존중해야 할 과학과 의학이 국가 권력과 결탁하여 인간을 수단으로 전락시킨 대표적인 전쟁 범죄입니다.',
+                humanRightsQ: '과학 기술이 인류를 위협하는 도구가 되지 않기 위해 가장 필요한 원칙은 무엇일까? (다중 선택 가능)',
+                humanRightsOpts: ['인간의 존엄성 훼손 금지', '생명 존중의 원칙', '연구 대상자의 자발적 동의 (연구 윤리)', '과학자의 사회적 책임감'],
+                humanRightsFeedback: '과학의 발전은 반드시 생명 존중과 윤리적 책임이라는 튼튼한 토대 위에서 이루어져야 합니다. 인간의 존엄을 무시한 발전은 결국 인류 자신을 파괴합니다.',
+                teacherHint: '잔혹한 실험 내용 묘사는 피하고, \'과학 윤리\'와 \'인간 존엄성\'의 관계에 대해 학생들이 깊이 토론해 볼 수 있도록 유도해 주세요.'
+            }
+        ];
+
+        const INITIAL_STATE = {
+            nickname: "",
+            cases: {
+                case1: { status: 'unlocked', cluesViewed: [], hintsUsed: 0, guess: "", answer: "", correct: null, score: 0, detectiveNote: "" },
+                case2: { status: 'locked', cluesViewed: [], hintsUsed: 0, guess: "", answer: "", correct: null, score: 0, detectiveNote: "" },
+                case3: { status: 'locked', cluesViewed: [], hintsUsed: 0, guess: "", answer: "", correct: null, score: 0, detectiveNote: "" },
+                case4: { status: 'locked', cluesViewed: [], hintsUsed: 0, guess: "", answer: "", correct: null, score: 0, detectiveNote: "" },
+                case5: { status: 'locked', cluesViewed: [], hintsUsed: 0, guess: "", answer: "", correct: null, score: 0, detectiveNote: "" }
+            },
+            totalScore: 0,
+            museum: { visited: false, exhibits: [] },
+            finalCaseCompleted: false,
+            badges: []
+        };
+
+        function getSavedState() {
+            try {
+                const saved = localStorage.getItem('historyDetectiveState');
+                if (saved) return JSON.parse(saved);
+            } catch (e) { console.error("Could not load state", e); }
+            return INITIAL_STATE;
+        }
+
+        const App = () => {
+            const [gameState, setGameState] = React.useState(getSavedState());
+            const [currentView, setCurrentView] = React.useState('intro'); // intro, dash, case, final, museum
+            const [activeCaseId, setActiveCaseId] = React.useState(null);
+
+            React.useEffect(() => {
+                localStorage.setItem('historyDetectiveState', JSON.stringify(gameState));
+            }, [gameState]);
+
+            const updateGameState = (updater) => {
+                setGameState(prev => {
+                    const newState = typeof updater === 'function' ? updater(prev) : updater;
+                    return { ...prev, ...newState };
+                });
+            };
+
+            const startGame = (nickname) => {
+                updateGameState({ nickname });
+                setCurrentView('dash');
+            };
+
+            const openCase = (id) => {
+                setActiveCaseId(id);
+                setCurrentView('case');
+            };
+
+            const backToDash = () => {
+                setCurrentView('dash');
+                setActiveCaseId(null);
+            };
+
+            // Calculate overall progress
+            const casesCompleted = Object.values(gameState.cases).filter(c => c.correct === true).length;
+            
+            let content;
+            switch(currentView) {
+                case 'intro': content = <IntroScreen onStart={startGame} savedName={gameState.nickname} />; break;
+                case 'dash': content = <Dashboard state={gameState} onOpenCase={openCase} onOpenFinal={() => setCurrentView('final')} />; break;
+                case 'case': content = <CaseView caseData={CASES_DATA.find(c => c.id === activeCaseId)} gameState={gameState} updateGameState={updateGameState} onBack={backToDash} />; break;
+                case 'final': content = <FinalCase gameState={gameState} onComplete={() => setCurrentView('museum')} />; break;
+                case 'museum': content = <Museum gameState={gameState} onBackToDash={backToDash} updateGameState={updateGameState} />; break;
+                default: content = <IntroScreen onStart={startGame} />;
+            }
+
+            return (
+                <div className="font-sans text-ink flex flex-col min-h-screen">
+                    {/* Global Header */}
+                    <header className="bg-ink text-paper py-3 px-6 flex justify-between items-center shadow-md z-10 sticky top-0">
+                        <div className="flex items-center gap-2 cursor-pointer" onClick={() => gameState.nickname ? setCurrentView('dash') : null}>
+                            <span className="text-2xl">🔎</span>
+                            <div>
+                                <h1 className="text-xl font-bold tracking-wider text-folder">사라진 인권을 찾아라</h1>
+                                <p className="text-xs opacity-70">제2차 세계대전 역사 사건파일</p>
+                            </div>
+                        </div>
+                        {gameState.nickname && currentView !== 'intro' && (
+                            <div className="flex items-center gap-4 text-sm bg-stone-800 px-4 py-2 rounded-full border border-stone-600 shadow-inner">
+                                <span className="font-semibold text-folder">{gameState.nickname} 탐정님</span>
+                                <div className="h-4 w-px bg-stone-600"></div>
+                                <span className="flex items-center gap-1">
+                                    <span className="text-yellow-400">🏅</span> {gameState.totalScore}점
+                                </span>
+                            </div>
+                        )}
+                    </header>
+                    
+                    <main className="flex-grow flex flex-col relative overflow-hidden">
+                        {content}
+                    </main>
+                </div>
+            );
+        };
+
+        const IntroScreen = ({ onStart, savedName }) => {
+            const [name, setName] = React.useState(savedName || "");
+            
+            return (
+                <div className="flex-grow flex items-center justify-center p-4">
+                    <div className="bg-paper p-8 max-w-lg w-full rounded-sm shadow-[8px_8px_0px_0px_rgba(0,0,0,0.8)] border-2 border-ink flex flex-col items-center text-center">
+                        <span className="text-5xl mb-4">🕵️‍♂️</span>
+                        <h2 className="text-3xl font-bold mb-2 font-serif">탐정 사무소에 오신 것을 환영합니다</h2>
+                        <p className="mb-6 leading-relaxed bg-folder/30 p-4 rounded-md border border-folder text-sm text-left">
+                            과거의 안타까운 사건들이 기록된 낡은 파일들이 발견되었습니다.<br/>
+                            당신의 임무는 <b>단서를 모아 사건의 정체를 추론하고, 그 안에 숨겨진 인권의 의미를 찾아내는 것</b>입니다.<br/>
+                            <br/>
+                            <span className="text-stamp font-bold">주의:</span> 탐정은 정답을 빨리 찍는 사람이 아닙니다. 단서를 근거로 가장 타당한 결론을 내리는 사람입니다.
+                        </p>
+                        <input 
+                            type="text" 
+                            placeholder="탐정님의 이름을 입력하세요" 
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full p-3 border-2 border-ink rounded focus:outline-none focus:ring-2 focus:ring-folder mb-4 text-center font-bold"
+                            onKeyDown={(e) => e.key === 'Enter' && name.trim() && onStart(name.trim())}
+                        />
+                        <button 
+                            onClick={() => onStart(name.trim())}
+                            disabled={!name.trim()}
+                            className="w-full bg-ink text-paper py-3 rounded font-bold text-lg disabled:opacity-50 hover:bg-stone-800 transition-colors"
+                        >
+                            사건 조사 시작하기
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const Dashboard = ({ state, onOpenCase, onOpenFinal }) => {
+            const casesCompleted = Object.values(state.cases).filter(c => c.correct).length;
+            
+            return (
+                <div className="flex-grow p-6 max-w-5xl mx-auto w-full">
+                    <div className="flex justify-between items-end mb-6 border-b-2 border-ink pb-2">
+                        <h2 className="text-2xl font-serif font-bold flex items-center gap-2">
+                            <span>🗄️</span> 미해결 사건 파일 보관함
+                        </h2>
+                        <div className="text-sm font-bold bg-folder px-3 py-1 rounded border border-ink">
+                            해결율: {casesCompleted} / 5
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {CASES_DATA.map((cData, index) => {
+                            const caseState = state.cases[cData.id];
+                            const isLocked = caseState.status === 'locked';
+                            const isCompleted = caseState.correct === true;
+
+                            return (
+                                <div key={cData.id} 
+                                    className={`relative rounded border-2 border-ink p-5 flex flex-col h-56 transition-all ${
+                                        isLocked ? 'bg-stone-300 opacity-70' : 
+                                        isCompleted ? 'bg-green-50 shadow-[4px_4px_0px_0px_rgba(44,110,73,1)] border-green-800' : 
+                                        'bg-paper shadow-[6px_6px_0px_0px_rgba(0,0,0,0.8)] hover:-translate-y-1 hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,0.8)] cursor-pointer'
+                                    }`}
+                                    onClick={() => !isLocked && onOpenCase(cData.id)}
+                                >
+                                    {isLocked && (
+                                        <div className="absolute inset-0 flex items-center justify-center z-10 backdrop-blur-sm rounded">
+                                            <span className="text-4xl">🔒</span>
+                                        </div>
+                                    )}
+                                    <div className="text-xs font-bold text-stone-500 mb-2">
+                                        FILE NO. {String(index + 1).padStart(2, '0')}
+                                        <span className="ml-2 text-yellow-600">{'⭐'.repeat(cData.difficulty)}</span>
+                                    </div>
+                                    <h3 className="text-xl font-bold font-serif leading-snug mb-3 flex-grow whitespace-pre-line">
+                                        {isCompleted ? cData.realName : cData.mysteryTitle}
+                                    </h3>
+                                    
+                                    <div className="flex justify-between items-center mt-auto">
+                                        <div className="flex gap-1">
+                                            {cData.clues.map((_, i) => (
+                                                <div key={i} className={`w-3 h-3 rounded-full border border-ink ${caseState.cluesViewed.includes(cData.clues[i].id) ? 'bg-ink' : 'bg-transparent'}`}></div>
+                                            ))}
+                                        </div>
+                                        {isCompleted ? (
+                                            <span className="text-green-700 font-bold flex items-center gap-1"><span className="text-stamp text-xl font-serif font-black rotate-[-15deg]">해결됨</span></span>
+                                        ) : (
+                                            <span className="text-sm font-bold bg-ink text-paper px-2 py-1 rounded">조사하기</span>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+
+                    {casesCompleted === 5 && (
+                        <div className="mt-12 text-center">
+                            <button 
+                                onClick={onOpenFinal}
+                                className="bg-stamp text-paper px-8 py-4 rounded font-bold text-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all animate-pulse"
+                            >
+                                🚨 FINAL CASE 열기 🚨
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const CaseView = ({ caseData, gameState, updateGameState, onBack }) => {
+            const caseState = gameState.cases[caseData.id];
+            const [selectedClue, setSelectedClue] = React.useState(null);
+            const [phase, setPhase] = React.useState(caseState.correct === true ? 'resolved' : 'investigation'); // investigation, inference, resolved
+            const [tempGuess, setTempGuess] = React.useState(caseState.guess || "");
+            const [showHintMsg, setShowHintMsg] = React.useState("");
+            const [customModal, setCustomModal] = React.useState(null); // 인앱 모달 상태 추가
+
+            const viewedCount = caseState.cluesViewed.length;
+            const canInfer = viewedCount >= 3;
+
+            const handleClueClick = (clue, index) => {
+                // 아직 순서가 되지 않은 잠긴 단서를 클릭한 경우
+                if (index > viewedCount) {
+                    setCustomModal({
+                        title: '🔒 잠긴 단서',
+                        message: '이전 단서들을 순서대로 먼저 조사해야 합니다!',
+                        onConfirm: () => setCustomModal(null)
+                    });
+                    return;
+                }
+
+                if (caseState.cluesViewed.includes(clue.id) || index === viewedCount) {
+                    if (clue.isDecisive && !caseState.cluesViewed.includes(clue.id)) {
+                        setCustomModal({
+                            title: '⚠️ 결정적 단서 확인',
+                            message: '결정적 단서입니다. 사건의 실체를 파악하는 데 매우 중요한 정보가 포함되어 있습니다. 확인하시겠습니까?',
+                            onConfirm: () => {
+                                setCustomModal(null);
+                                openClueAction(clue);
+                            },
+                            onCancel: () => setCustomModal(null)
+                        });
+                        return;
+                    }
+                    openClueAction(clue);
+                }
+            };
+
+            const openClueAction = (clue) => {
+                setSelectedClue(clue);
+                if (!caseState.cluesViewed.includes(clue.id)) {
+                    const newViewed = [...caseState.cluesViewed, clue.id];
+                    updateGameState(prev => ({
+                        cases: {
+                            ...prev.cases,
+                            [caseData.id]: { ...prev.cases[caseData.id], cluesViewed: newViewed }
+                        }
+                    }));
+                }
+            };
+
+            const submitGuess = (selectedOption) => {
+                const isCorrect = selectedOption === caseData.correctAnswer;
+                
+                if (isCorrect) {
+                    let scoreEarned = 100;
+                    if (viewedCount <= 3) scoreEarned += 50; // Bonus for early deduction
+                    if (viewedCount === 5) scoreEarned += 20; // Bonus for thoroughness
+                    
+                    // Unlock next case logic
+                    const casesKeys = Object.keys(gameState.cases);
+                    const currentIndex = casesKeys.indexOf(caseData.id);
+                    let nextCasesUpdate = {};
+                    if (currentIndex < casesKeys.length - 1) {
+                        const nextCaseId = casesKeys[currentIndex + 1];
+                        nextCasesUpdate = {
+                            [nextCaseId]: { ...gameState.cases[nextCaseId], status: 'unlocked' }
+                        };
+                    }
+
+                    updateGameState(prev => ({
+                        totalScore: prev.totalScore + scoreEarned,
+                        cases: {
+                            ...prev.cases,
+                            [caseData.id]: { ...prev.cases[caseData.id], correct: true, answer: selectedOption, score: scoreEarned },
+                            ...nextCasesUpdate
+                        }
+                    }));
+                    setPhase('resolved');
+                } else {
+                    setShowHintMsg("❌ 아직 단서가 부족하거나 추론이 어긋난 것 같습니다. 확인한 단서들을 다시 천천히 읽어보세요.");
+                    setTimeout(() => setShowHintMsg(""), 4000);
+                }
+            };
+
+            const handleNoteChange = (e) => {
+                updateGameState(prev => ({
+                    cases: {
+                        ...prev.cases,
+                        [caseData.id]: { ...prev.cases[caseData.id], detectiveNote: e.target.value }
+                    }
+                }));
+            };
+
+            return (
+                <div className="flex-grow flex flex-col md:flex-row h-full absolute inset-0">
+                    {/* Left Panel: Clues */}
+                    <div className="w-full md:w-2/3 bg-stone-200 p-4 md:p-8 overflow-y-auto custom-scrollbar relative border-r-2 border-stone-300">
+                        <button onClick={onBack} className="absolute top-4 left-4 text-sm font-bold bg-white px-3 py-1 border border-ink rounded shadow hover:bg-stone-100 z-20">
+                            ← 보관함으로
+                        </button>
+
+                        <div className="max-w-2xl mx-auto mt-10">
+                            <div className="mb-8">
+                                <h2 className="text-3xl font-serif font-bold whitespace-pre-line leading-tight bg-white inline-block px-4 py-2 border-2 border-ink shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+                                    {caseData.mysteryTitle}
+                                </h2>
+                                <p className="mt-6 text-lg leading-relaxed text-stone-700 bg-stone-100 p-4 rounded border-l-4 border-folder">
+                                    {caseData.desc}
+                                </p>
+                            </div>
+
+                            <div className="space-y-4">
+                                {caseData.clues.map((clue, index) => {
+                                    const isViewed = caseState.cluesViewed.includes(clue.id);
+                                    const isNext = index === viewedCount;
+                                    const isLocked = index > viewedCount;
+                                    const isSelected = selectedClue?.id === clue.id;
+
+                                    return (
+                                        <div key={clue.id} 
+                                            className={`
+                                                relative border-2 transition-all duration-300
+                                                ${isLocked ? 'border-dashed border-stone-400 opacity-50 bg-stone-100 cursor-not-allowed' : 
+                                                  isNext ? 'border-ink bg-folder cursor-pointer hover:shadow-lg hover:-translate-y-1 animate-pulse' : 
+                                                  'border-ink bg-paper cursor-pointer shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]'}
+                                                ${isSelected ? 'ring-4 ring-yellow-400 shadow-xl scale-[1.02] z-10' : ''}
+                                            `}
+                                            onClick={() => handleClueClick(clue, index)}
+                                        >
+                                            <div className="p-4 flex items-start gap-4">
+                                                <div className="text-3xl bg-white p-2 rounded-full border border-stone-300 shadow-sm shrink-0">
+                                                    {isLocked ? '🔒' : clue.icon}
+                                                </div>
+                                                <div className="flex-grow">
+                                                    <div className="text-xs font-bold text-stone-500 mb-1">
+                                                        CLUE 0{index + 1} {clue.isDecisive && <span className="text-red-500 ml-2">⚠️ 결정적 단서</span>}
+                                                    </div>
+                                                    <h4 className="text-xl font-bold font-serif text-ink">
+                                                        {isLocked ? '접근 불가' : clue.title}
+                                                    </h4>
+                                                    
+                                                    {isViewed && (
+                                                        <div className="mt-3 pt-3 border-t border-stone-300/50">
+                                                            {clue.isMap ? (
+                                                                <div className="bg-stone-800 text-stone-200 p-3 rounded font-mono text-sm mb-2 flex items-center justify-center min-h-[80px] border border-stone-900">
+                                                                    📡 지역 데이터 스캔 중... [{clue.mapText}]
+                                                                </div>
+                                                            ) : null}
+                                                            <p className="text-[15px] leading-relaxed text-ink/90 whitespace-pre-line font-serif">
+                                                                {clue.content}
+                                                            </p>
+                                                            <div className="mt-4 bg-yellow-100/50 p-3 rounded text-sm text-yellow-900 border-l-2 border-yellow-500 font-bold italic">
+                                                                💡 탐정의 질문: {clue.question}
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* Inference Button Trigger */}
+                            {phase === 'investigation' && (
+                                <div className="mt-12 text-center pb-20">
+                                    <button 
+                                        onClick={() => setPhase('inference')}
+                                        disabled={!canInfer}
+                                        className={`px-8 py-4 rounded text-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] border-2 border-ink transition-all
+                                            ${canInfer ? 'bg-ink text-paper hover:-translate-y-1' : 'bg-stone-300 text-stone-500 cursor-not-allowed opacity-70'}
+                                        `}
+                                    >
+                                        {canInfer ? '🔍 수집된 단서로 사건 추론하기' : `단서가 부족합니다 (${viewedCount}/3 필요)`}
+                                    </button>
+                                </div>
+                            )}
+
+                        </div>
+                    </div>
+
+                    {/* Right Panel: Detective Note & Action Area */}
+                    <div className="w-full md:w-1/3 bg-paper p-6 flex flex-col shadow-[-4px_0_15px_-3px_rgba(0,0,0,0.1)] z-10 custom-scrollbar overflow-y-auto">
+                        <div className="mb-6 flex justify-between items-center border-b-2 border-ink pb-2">
+                            <h3 className="font-bold text-xl flex items-center gap-2"><span className="text-2xl">📝</span> 탐정 노트</h3>
+                            <div className="text-sm font-bold">진척도: {viewedCount}/5</div>
+                        </div>
+
+                        <textarea
+                            className="w-full h-40 p-4 bg-[url('https://www.transparenttextures.com/patterns/lined-paper.png')] bg-yellow-50/50 border-2 border-ink rounded resize-none focus:outline-none focus:ring-2 focus:ring-folder custom-scrollbar text-ink/80 font-serif leading-loose"
+                            placeholder="단서를 보며 떠오른 생각, 키워드, 가설을 자유롭게 적어보세요..."
+                            value={caseState.detectiveNote}
+                            onChange={handleNoteChange}
+                            readOnly={phase === 'resolved'}
+                        />
+
+                        {/* Action Area based on phase */}
+                        <div className="mt-6 flex-grow flex flex-col">
+                            {phase === 'investigation' && (
+                                <div className="flex-grow flex flex-col items-center justify-center text-center p-6 border-2 border-dashed border-stone-300 rounded bg-stone-50">
+                                    <span className="text-4xl mb-3 opacity-50">🕵️‍♀️</span>
+                                    <p className="text-stone-500 font-bold">좌측에서 단서를 조사하세요.</p>
+                                    <p className="text-xs text-stone-400 mt-2">단서 3개 이상 확인 시 추론 가능</p>
+                                </div>
+                            )}
+
+                            {phase === 'inference' && (
+                                <div className="flex flex-col gap-4 animate-fade-in-up">
+                                    <div className="bg-ink text-paper p-4 rounded-t-lg font-bold">
+                                        🤔 최종 추론
+                                    </div>
+                                    <div className="px-2">
+                                        <p className="text-sm font-bold text-stone-600 mb-2">Q. 지금까지의 단서를 바탕으로, 이 사건의 정체는 무엇이라고 생각하나요?</p>
+                                        <textarea 
+                                            className="w-full p-3 border-2 border-stone-400 rounded focus:border-ink resize-none text-sm mb-4"
+                                            rows="3"
+                                            placeholder="나의 가설을 짧게 적어보세요 (필수)"
+                                            value={tempGuess}
+                                            onChange={(e) => {
+                                                setTempGuess(e.target.value);
+                                                updateGameState(prev => ({
+                                                    cases: { ...prev.cases, [caseData.id]: { ...prev.cases[caseData.id], guess: e.target.value } }
+                                                }));
+                                            }}
+                                        />
+                                        
+                                        {showHintMsg && (
+                                            <div className="mb-4 p-3 bg-red-100 text-red-800 text-sm font-bold rounded border border-red-300 animate-pulse">
+                                                {showHintMsg}
+                                            </div>
+                                        )}
+
+                                        <p className="text-sm font-bold text-stone-600 mb-2">해당되는 사건을 선택하세요:</p>
+                                        <div className="grid grid-cols-1 gap-2">
+                                            {caseData.options.map(opt => (
+                                                <button key={opt.id} 
+                                                    onClick={() => {
+                                                        if(tempGuess.trim().length < 2) {
+                                                            setCustomModal({
+                                                                title: '알림',
+                                                                message: '가설을 먼저 간단히 작성해주세요!',
+                                                                onConfirm: () => setCustomModal(null)
+                                                            });
+                                                            return;
+                                                        }
+                                                        submitGuess(opt.id);
+                                                    }}
+                                                    className="p-3 text-left border-2 border-ink rounded bg-white hover:bg-stone-100 font-bold flex gap-3 transition-colors group"
+                                                >
+                                                    <span className="bg-stone-200 px-2 rounded group-hover:bg-ink group-hover:text-white transition-colors">{opt.id}</span> 
+                                                    {opt.text}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        <button onClick={() => setPhase('investigation')} className="mt-4 text-sm text-stone-500 underline w-full text-center">단서 더 찾아보기</button>
+                                    </div>
+                                </div>
+                            )}
+
+                            {phase === 'resolved' && (
+                                <div className="flex flex-col gap-4 animate-fade-in-up bg-green-50 p-4 border-2 border-green-800 rounded">
+                                    <div className="flex items-center gap-2 text-green-800 font-bold text-xl border-b border-green-300 pb-2">
+                                        <span>✅</span> 사건 해결 완료!
+                                    </div>
+                                    <h4 className="text-2xl font-black font-serif text-ink">{caseData.realName}</h4>
+                                    
+                                    <div className="bg-white p-3 rounded border border-green-200 text-sm text-stone-800 leading-relaxed font-serif relative">
+                                        <div className="absolute -top-3 left-3 bg-green-100 px-2 text-xs font-bold text-green-800 rounded">역사적 사실</div>
+                                        {caseData.explanation}
+                                    </div>
+
+                                    <div className="mt-2 bg-yellow-50 p-3 border border-yellow-400 rounded border-dashed">
+                                        <p className="text-xs font-bold text-yellow-800 mb-1 flex items-center gap-1"><span>⚖️</span> 인권 성찰</p>
+                                        <p className="text-sm font-bold text-ink mb-2">{caseData.humanRightsQ}</p>
+                                        
+                                        {caseState.hrAnswered ? (
+                                            <div className="text-sm text-green-700 font-bold bg-green-100 p-2 rounded">
+                                                {caseData.humanRightsFeedback}
+                                            </div>
+                                        ) : (
+                                            <div className="flex flex-wrap gap-2 mt-2">
+                                                {caseData.humanRightsOpts.map((opt, i) => (
+                                                    <button key={i} 
+                                                        className="text-xs bg-white border border-stone-300 px-2 py-1 rounded hover:bg-stone-100"
+                                                        onClick={() => {
+                                                            updateGameState(prev => ({ cases: { ...prev.cases, [caseData.id]: { ...prev.cases[caseData.id], hrAnswered: true } } }));
+                                                        }}
+                                                    >
+                                                        {opt}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    <button onClick={onBack} className="mt-4 bg-ink text-paper py-3 rounded font-bold w-full hover:bg-stone-800 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.3)]">
+                                        보관함으로 돌아가기
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* 인앱 커스텀 모달 컴포넌트 */}
+                    {customModal && (
+                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                            <div className="bg-paper p-6 rounded border-2 border-ink max-w-md w-full shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center animate-fade-in-up">
+                                <h3 className="text-2xl font-bold font-serif mb-3">{customModal.title}</h3>
+                                <p className="text-stone-800 mb-6 font-serif text-lg leading-relaxed">{customModal.message}</p>
+                                <div className="flex gap-3 justify-center">
+                                    {customModal.onCancel && (
+                                        <button onClick={customModal.onCancel} className="px-5 py-2.5 border-2 border-ink rounded bg-stone-200 font-bold hover:bg-stone-300">
+                                            취소
+                                        </button>
+                                    )}
+                                    <button onClick={customModal.onConfirm} className="px-6 py-2.5 bg-ink text-paper rounded font-bold hover:bg-stone-800 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                                        확인
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const FinalCase = ({ gameState, onComplete }) => {
+            const [step, setStep] = React.useState(0);
+            const [selectedCards, setSelectedCards] = React.useState([]);
+
+            const synthesisWords = [
+                '차별', '강제 이동', '민간인 피해', '착취', '인간 대상 실험', '전쟁', '폭력', '기록', '기억'
+            ];
+
+            const nextStep = () => setStep(s => s + 1);
+
+            return (
+                <div className="flex-grow flex flex-col items-center justify-center p-6 bg-ink text-paper relative overflow-hidden">
+                    {/* Background decoration */}
+                    <div className="absolute inset-0 opacity-10 flex items-center justify-center pointer-events-none">
+                        <span className="text-[20rem]">👁️</span>
+                    </div>
+
+                    <div className="max-w-3xl w-full z-10 flex flex-col items-center text-center">
+                        {step === 0 && (
+                            <div className="animate-fade-in-up">
+                                <h2 className="text-4xl font-black font-serif text-stamp mb-6 tracking-widest typewriter">FINAL CASE</h2>
+                                <p className="text-xl mb-12 text-stone-300 leading-relaxed">
+                                    5개의 사건 파일을 모두 조사했습니다.<br/>
+                                    서로 다른 시대, 다른 장소에서 벌어진 일들이지만...
+                                </p>
+                                <button onClick={nextStep} className="border-2 border-paper px-8 py-3 font-bold hover:bg-paper hover:text-ink transition-colors">
+                                    기록들을 모아보기
+                                </button>
+                            </div>
+                        )}
+
+                        {step === 1 && (
+                            <div className="w-full">
+                                <h3 className="text-2xl mb-8 font-serif">우리가 마주한 기록의 조각들</h3>
+                                <div className="flex flex-wrap justify-center gap-4 mb-12">
+                                    {synthesisWords.map((word, i) => (
+                                        <div key={i} 
+                                            className="bg-stone-800 px-4 py-2 border border-stone-600 rounded shadow-lg text-lg animate-fade-in-up" 
+                                            style={{animationDelay: `${i * 100}ms`}}
+                                        >
+                                            {word}
+                                        </div>
+                                    ))}
+                                </div>
+                                <button onClick={nextStep} className="bg-paper text-ink px-8 py-3 font-bold rounded animate-pulse shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                                    이 조각들이 가리키는 본질은?
+                                </button>
+                            </div>
+                        )}
+
+                        {step === 2 && (
+                            <div className="w-full bg-stone-900 p-8 border border-stone-700 rounded-lg shadow-2xl">
+                                <h3 className="text-2xl font-bold mb-6 text-yellow-500">"사라진 것은 무엇이었을까?"</h3>
+                                <p className="mb-8 text-stone-300 text-lg">다섯 사건을 관통하며 공통적으로 짓밟히고 빼앗긴 것은 무엇이라고 생각하나요?</p>
+                                
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+                                    {['영토와 국경', '인간의 존엄과 권리', '국가의 경제력', '강력한 군사력'].map((opt, i) => (
+                                        <button key={i}
+                                            className="p-4 border-2 border-stone-600 rounded bg-stone-800 hover:bg-stone-700 hover:border-yellow-500 transition-colors flex items-center justify-between group"
+                                            onClick={() => {
+                                                if(i === 1) nextStep();
+                                                else alert("다시 한번 깊이 생각해 보세요. 폭력 속에서 개인이 잃어버린 가장 근본적인 가치입니다.");
+                                            }}
+                                        >
+                                            <span className="font-bold text-lg">{opt}</span>
+                                            <span className="opacity-0 group-hover:opacity-100 transition-opacity">👈</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {step === 3 && (
+                            <div className="text-center animate-fade-in-up">
+                                <div className="text-5xl mb-6">🕊️</div>
+                                <h2 className="text-3xl font-bold mb-6 font-serif">인간의 존엄과 권리</h2>
+                                <p className="text-xl leading-relaxed text-stone-300 mb-12 max-w-2xl mx-auto">
+                                    맞습니다. 과거에 발생한 수많은 비극의 이면에는 특정 집단이나 국가의 목적을 위해 <span className="text-yellow-400 font-bold">인간을 수단으로 여기고 존엄성을 부정한 폭력</span>이 있었습니다.
+                                    <br/><br/>
+                                    탐정님의 조사는 여기서 끝납니다.<br/>
+                                    하지만 우리가 역사를 기억하는 이유는 과거에 머물기 위해서가 아니라, <b>다시는 이런 일이 반복되지 않는 미래</b>를 만들기 위해서입니다.
+                                </p>
+                                <button onClick={onComplete} className="bg-yellow-600 text-white px-10 py-4 rounded font-bold text-xl hover:bg-yellow-500 transition-colors shadow-lg shadow-yellow-600/20">
+                                    나의 '기억의 박물관'으로 이동
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        const Museum = ({ gameState, onBackToDash }) => {
+            return (
+                <div className="flex-grow bg-[#1a1a1a] text-stone-200 p-8 overflow-y-auto font-serif relative">
+                    {/* Architectural background elements */}
+                    <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-black/80 to-transparent pointer-events-none"></div>
+                    <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
+
+                    <div className="max-w-5xl mx-auto relative z-10">
+                        <div className="text-center mb-16 pt-8 border-b border-stone-700 pb-8">
+                            <h1 className="text-4xl font-bold tracking-widest text-stone-300 mb-2 font-sans uppercase">Museum of Memory</h1>
+                            <h2 className="text-2xl text-stone-400">{gameState.nickname} 탐정의 기억 전시관</h2>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                            {CASES_DATA.map((cData, i) => {
+                                const cState = gameState.cases[cData.id];
+                                if (!cState.correct) return null; // Defensive check
+
+                                return (
+                                    <div key={i} className="bg-stone-900 border border-stone-700 p-6 shadow-2xl relative group overflow-hidden">
+                                        <div className="absolute -right-4 -top-4 text-6xl opacity-5 group-hover:scale-110 transition-transform">{cData.clues[0].icon}</div>
+                                        <div className="text-xs text-stone-500 uppercase tracking-widest mb-4 border-b border-stone-800 pb-2">Exhibit {i+1}</div>
+                                        <h3 className="text-xl font-bold text-stone-200 mb-4 h-14 flex items-end">{cData.realName}</h3>
+                                        
+                                        <div className="space-y-4 text-sm text-stone-400">
+                                            <div>
+                                                <span className="block text-[10px] text-stone-500 uppercase mb-1">핵심 기록</span>
+                                                <span className="italic">"{cData.clues[cData.clues.length-1].title}"</span>
+                                            </div>
+                                            <div>
+                                                <span className="block text-[10px] text-stone-500 uppercase mb-1">나의 추론 기록</span>
+                                                <div className="bg-stone-950 p-2 border-l-2 border-stone-700 max-h-24 overflow-y-auto custom-scrollbar font-sans text-xs">
+                                                    {cState.guess || "기록 없음"}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                        
+                        <div className="mt-16 text-center text-stone-500 text-sm">
+                            <p>기억은 평화를 지키는 가장 강력한 무기입니다.</p>
+                            <p className="mt-2 text-xs">수업용 자료로 제작된 가상의 역사 탐정 시뮬레이션입니다.</p>
+                            <button onClick={onBackToDash} className="mt-8 text-stone-400 hover:text-white underline font-sans text-xs">
+                                관리 화면으로 돌아가기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // Initialize React App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
